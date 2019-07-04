@@ -7,6 +7,7 @@ from picamera import PiCamera
 import numpy as np
 import cv2
 import RobotApi
+import thread
 # define HSV color value
 red_min = np.array([0, 128, 46]) 
 red_max = np.array([5, 255, 255]) 
@@ -31,6 +32,8 @@ camera.resolution = (640, 480)
 camera.framerate = 25
 rawCapture = PiRGBArray(camera, size=(640, 480)) 
 time.sleep(0.1)
+global color
+color = "red"
 def detectColor():
     #read rgb_jpg file for test
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
@@ -60,6 +63,7 @@ def detectColor():
             #output number and color we find in the photo
             number = len(contours)
             if number >=1:
+                print(2)
                 total = 0
                 for i in range(0, number):
                     total = total + len(contours[i])
@@ -70,32 +74,69 @@ def detectColor():
                     return name
         rawCapture.truncate(0)
     return name
-def crossRoad():
-    res = RobotApi.ubtSearchExtendSensor()
-    infrared_sensor=RobotApi.UBTEDU_ROBOTINFRARED_SENSOR_T()
-    while(True):
-        color = detectColor()
-        print("get:" + color)
-        if(color == 'green'):
+def forward(threadName):
+    global color
+    flag = False
+    while(1):
+        print(flag)
+        if(flag):
             break
-    while(True):
-        ret = RobotApi.ubtReadSensorValue("infrared", infrared_sensor, 4)
-        color = detectColor()
-        if ret!= 0:
-            print("InfraredSensor Error!")
-            break
-        distance = infrared_sensor.iValue
-        obstacle = infrared_sensor.iValue
-        if(color == 'green' or color == 'yellow' or color == 'red'):
-            print("distance: %d mm", distance)
-            if(distance < 100):
+        time.sleep(1)
+        print(threadName)
+        res = RobotApi.ubtSearchExtendSensor()
+        infrared_sensor=RobotApi.UBTEDU_ROBOTINFRARED_SENSOR_T()
+        while(True):
+            time.sleep(1)
+            #color = detectColor()
+            print("get:" + color)
+            if(color == 'green'):
                 break
-        else:
-            while(True):
-                print("obstacle: %d mm", obstacle)
-                if(obstacle > 300):
+
+        while(True):
+            time.sleep(1)
+            ret = RobotApi.ubtReadSensorValue("infrared", infrared_sensor, 4)
+            #color = detectColor()
+            #print("In distance:"+color)
+            if ret!= 0:
+                print("InfraredSensor Error!")
+                break
+            distance = infrared_sensor.iValue
+
+            if(color == 'green' or color == 'yellow' or color == 'red'):
+                print("distance: %d mm", distance)
+                if(distance < 100):
+                    print("distance < 100...")
+                    flag = True
                     break
-        RobotApi.ubtSetRobotMotion("walk", "front", 2, 1)
+            else:
+                while(True):
+                    time.sleep(1)
+                    ret = RobotApi.ubtReadSensorValue("infrared", infrared_sensor, 4)
+                    obstacle = infrared_sensor.iValue
+                    print("obstacle: %d mm", obstacle)
+                    if(obstacle > 300):
+                        print("distance > 300:")
+                        break
+            print("going")
+            RobotApi.ubtSetRobotMotion("walk", "front", 1, 1)
+
+def detect(threadName):
+    global color
+    while(1):
+        print(threadName)
+        color = detectColor()
+    print("over")
+
+def crossRoad():
+    try:
+        print("start")
+        thread.start_new_thread(forward, ("---------------------------------------", ))
+        thread.start_new_thread(detect, ("*********************************", ))
+    except:
+        print("Thread Error!")
+    time.sleep(200)
+    #while(1):
+       # pass
 
 if __name__ == '__main__':
     RobotApi.ubtRobotInitialize()
