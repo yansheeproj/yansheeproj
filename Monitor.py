@@ -41,56 +41,31 @@ def Monitor():
 def faceRecognition():
     # Face Detection
     num = "0"
-    RobotApi.ubtVisionDetect("face", num, 5)
-    time.sleep(1)
-    if int(num != "0":
-        # Face Recognition
+    ret = RobotApi.ubtVisionDetect("face", num, 5)
+    if int(num) != 0:
         name = "0"
+        # Face Recognition
         ret = RobotApi.ubtFaceCompare(5, name)
-        name = name.strip('').strip("\000").strip('\n')
-        name = name.rstrip('').strip('\0')
-        if name == "liuyuan":
-            pass
+        if name == "1" or name == '2' or name == '3':
+            print("in the database!")
         else:
-            os.close(sys.stderr.fileno())
-            pa = pyaudio.PyAudio() 
-            stream = pa.open(format=pyaudio.paInt16,
-                     channels=1,
-                     rate=16000,
-                     input=True, 
-                         frames_per_buffer=2000) 
-            save_buffer = '' 
-
-            wf = wave.open('1.wav', 'wb')
-            wf.setnchannels(1) 
-            wf.setsampwidth(2) 
-            wf.setframerate(16000)
-            try:
-                while True: 
-                string_audio_data = stream.read(1000)
-                save_buffer += string_audio_data
-                if len(save_buffer) >= 160000:
-                    wf.writeframes(save_buffer)
-                    break
-            except:
-                    wf.close()
+            print("not in the database")
+            pass
+            # send msg to another 
     else:
         pass
 
-if __name__ == '__main__':
-	# Init
-	RobotApi.ubtRobotInitialize()
-	gIPAddr = "127.0.0.1"
-
-	# Connect
-	ret = RobotApi.ubtRobotConnect("SDK", "1", gIPAddr)
-	if (0 != ret):
-		print("Can not connect to robot %s"%robotinfo.acName)
-		exit(1)
-
-	# Do
+if __name__ == '__main__': 
+    # Init
+    RobotApi.ubtRobotInitialize()
+    gIPAddr = "127.0.0.1"
+    # Connect
+    ret = RobotApi.ubtRobotConnect("SDK", "1", gIPAddr)
+    if (0 != ret):
+        print("Can not connect to robot %s"%robotinfo.acName)
+    	exit(1)
+    # Do
     faceRecognition()
-
     # Disconnect
-	RobotApi.ubtRobotDisconnect("SDK", "1", gIPAddr)
-	RobotApi.ubtRobotDeinitialize()
+    RobotApi.ubtRobotDisconnect("SDK", "1", gIPAddr)
+    RobotApi.ubtRobotDeinitialize()

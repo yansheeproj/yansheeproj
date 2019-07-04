@@ -27,19 +27,13 @@ def response(text, token):
     res = json.loads(r.text)
     return str(res['utterance'])
     
-if __name__ == "__main__":
-    RobotApi.ubtRobotInitialize()
-    #--------Connect--------------
-    gIPAddr="127.0.0.1"
-    robotinfo=RobotApi.UBTEDU_ROBOTINFO_T()
-    ret=RobotApi.ubtRobotConnect("SDK","1",gIPAddr)
-    if(0!=ret):
-        print("can not connect to robot %s"%robotinfo.acName)
-        exit(1)
+def dialog():
     utterance = raw_input("utterance: ")
+    RobotApi.ubtVoiceTTS(0, utterance)
     token = gen_token()
     while utterance != "exit":
         res = response(utterance, token)
         print res
         RobotApi.ubtVoiceTTS(0, res)
         utterance = raw_input("utterance: ")
+        RobotApi.ubtVoiceTTS(0, utterance)
