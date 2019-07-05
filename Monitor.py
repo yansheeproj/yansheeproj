@@ -7,7 +7,6 @@ import os
 import cv2
 import pyaudio, wave
 import os, sys
-from alert import alert
 
 
 def Monitor():
@@ -48,11 +47,9 @@ def faceRecognition():
         # Face Recognition
         ret = RobotApi.ubtFaceCompare(5, name)
         if name == "1" or name == '2' or name == '3':
-            print("in the database!")
+            return true
         else:
-            print("not in the database")
-            ips = ['192.168.43.134']
-            alert(ips)
+            return False
     else:
         pass
 

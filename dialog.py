@@ -11,7 +11,6 @@ import json
 import time
 import RobotApi
 
-
 def gen_token():
     seed = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+=-"
     sa = []
