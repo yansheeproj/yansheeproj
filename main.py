@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import time
+#import time
 import RobotApi
 import env
 import clock
@@ -27,7 +27,9 @@ while(True):
     print("1 早晨\n2 中午\n3 下午\n4 晚上")
     option = input()
     if(option == 1):
-        ld.lightDetection()
+        print("lightDetection")
+        ld.lightDetection(True)
+        print("tempAndHumi")
         env.getTempAndHumi()
         time = str(raw_input("请输入时间（yy mm dd hh mm ss）："))
         time = time.split(' ')
@@ -35,12 +37,18 @@ while(True):
         text = "主人，要" + text + "啦"
         thread.start_new_thread(clock.clock, (time[0], time[1], time[2], time[3], time[4], time[5], text))
     elif(option == 2):
+        print("crossRoad")
         cr.crossRoad()
     elif(option == 3):
+        print("faceRec")
         Monitor.faceRecognition()
     elif(option == 4):
+        print("mood")
         mood.mood()
+        print("dialog")
         dialog.dialog()
+        print("lightDetection")
+        ld.lightDetection(False)
     else:
         print("我没有那么多小秘密了~只有4个哦！")
 

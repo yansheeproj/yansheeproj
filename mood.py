@@ -1,7 +1,6 @@
 #-*- coding:UTF-8 -*-
 import time
 import RobotApi
-import dance#-*- coding: UTF-8 -*-
 import argparse
 from subprocess import call
 import datetime
@@ -15,11 +14,9 @@ def dance():
     RobotApi.ubtSetRobotVolume(60)
 
     ret = RobotApi.ubtStartRobotAction("dance",0)
-
-    time.sleep(35)
-
+    time.sleep(5)
     RobotApi.ubtStopRobotAction()
-
+    pygame.mixer.quit()
 
 def mood_judge():
     res = RobotApi.UBTEDU_FACEEXPRE_T()
@@ -43,4 +40,6 @@ def mood():
     if  m == "Fear":
         RobotApi.ubtVoiceTTS(0,"你看起来特别害怕 是不是你雷爸爸又揍你了没事我来跳支舞安慰一下啊你")
         time.sleep(5)
-    dance.dance()
+    dance()
+if __name__ == '__main__':
+    mood()
