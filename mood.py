@@ -1,7 +1,26 @@
 #-*- coding:UTF-8 -*-
 import time
 import RobotApi
-import dance
+import dance#-*- coding: UTF-8 -*-
+import argparse
+from subprocess import call
+import datetime
+import pygame
+
+
+def dance():
+    pygame.mixer.init()
+    pygame.mixer.music.load(r"/mnt/1xrobot/res/hts/haicaowu.mp3")
+    pygame.mixer.music.play(0,0)
+    RobotApi.ubtSetRobotVolume(60)
+
+    ret = RobotApi.ubtStartRobotAction("dance",0)
+
+    time.sleep(35)
+
+    RobotApi.ubtStopRobotAction()
+
+
 def mood_judge():
     res = RobotApi.UBTEDU_FACEEXPRE_T()
     net = RobotApi.ubtFaceExpression(10,res)

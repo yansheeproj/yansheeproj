@@ -25,12 +25,13 @@ black_max = np.array([180, 255, 10])
 white_min = np.array([0, 0, 70]) 
 white_max = np.array([180, 30, 255])
 COLOR_ARRAY = [ [ red_min, red_max, 'red'], [ red2_min, red2_max, 'red'], [ green_min, green_max, 'green'], [ blue_min, blue_max, 'blue'],[yellow_min, yellow_max, 'yellow'] ]
-#take photo use piCamera
+ 
 camera = PiCamera()
 camera.resolution = (640, 480)
 camera.framerate = 25
 rawCapture = PiRGBArray(camera, size=(640, 480)) 
 time.sleep(0.1)
+
 def detectColor():
     #read rgb_jpg file for test
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
@@ -70,4 +71,6 @@ def detectColor():
                     return name
         rawCapture.truncate(0)
     return name
+def closeCamera():
+    camera.close()
 

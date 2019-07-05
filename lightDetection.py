@@ -11,6 +11,7 @@ def lightDetection():
     camera.framerate = 32
     raw_capture = PiRGBArray(camera, size=(640, 480))
     time.sleep(1)
+    night = True
     for frame in camera.capture_continuous(raw_capture, format = "bgr", use_video_port=True):
         cnt = 0
         image = frame.array        
@@ -21,16 +22,22 @@ def lightDetection():
                 if j > 100:
                     cnt += 1
         print(cnt)
-
         if cnt / (640.0 * 480.0) < 0.07:
-            RobotApi.ubtSetRobotLED("button", "blue", "off")
-            break
-        else:
-            RobotApi.ubtSetRobotLED("button", "blue", "breath")
-            key = cv2.waitKey(1) & 0xFF
-            raw_capture.truncate(0)
-            if key == ord('q'):
+            if not night:
+                RobotApi.ubtVoiceTTS(1, "主人，天黑啦，早点休息吧，晚安")
+                night = True
+                RobotApi.ubtSetRobotLED("button", "blue", "off")
                 break
+        else:
+            if night:
+                RobotApi.ubtVoiceTTS(1, "主人，太阳出来了，该起床啦")
+                RobotApi.ubtSetRobotLED("button", "blue", "breath")
+                night = False
+        key = cv2.waitKey(1) & 0xFF
+        raw_capture.truncate(0)
+        if key == ord('q'):
+            break
+    camera.close()
                 
 
 if __name__ == '__main__':

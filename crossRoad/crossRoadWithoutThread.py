@@ -8,9 +8,8 @@ import numpy as np
 import cv2
 import RobotApi
 import detectColor as dc
-global cnt
 def crossRoad():
-    global cnt
+   #take photo use piCamera
     res = RobotApi.ubtSearchExtendSensor()
     infrared_sensor=RobotApi.UBTEDU_ROBOTINFRARED_SENSOR_T()
     while(True):
@@ -33,6 +32,7 @@ def crossRoad():
             if(distance < 100):
                 RobotApi.ubtVoiceTTS(0, "我们到了，主人")
                 RobotApi.ubtSetRobotMotion("wave", "left", 2, 1)
+                dc.closeCamera()
                 break
             elif(color == 'yellow'):
                 RobotApi.ubtVoiceTTS(0, "黄灯了，我们快一点，小心")
@@ -64,7 +64,7 @@ def crossRoad():
         else:
             speed = 2
         RobotApi.ubtSetRobotMotion("walk", "front", speed, 1)
-
+    
 if __name__ == '__main__':
     RobotApi.ubtRobotInitialize()
     #--------Connect--------------
@@ -76,7 +76,6 @@ if __name__ == '__main__':
         exit(1)
     #-------Test------------
     crossRoad()
-    global cnt
     #print(cnt)
     #-----------Disconnect---------
     RobotApi.ubtRobotDisconnect("SDK","1",gIPAddr)

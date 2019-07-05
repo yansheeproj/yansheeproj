@@ -7,6 +7,7 @@ import os
 import cv2
 import pyaudio, wave
 import os, sys
+from alert import alert
 
 
 def Monitor():
@@ -50,8 +51,8 @@ def faceRecognition():
             print("in the database!")
         else:
             print("not in the database")
-            pass
-            # send msg to another 
+            ips = ['192.168.43.134']
+            alert(ips)
     else:
         pass
 
